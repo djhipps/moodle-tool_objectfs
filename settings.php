@@ -152,17 +152,17 @@ if ($ADMIN->fulltree) {
     if (!$classexists) {
         $warningtext .= $OUTPUT->notification(get_string('settings:presignedurl:filetypesclass', 'tool_objectfs'));
     }
-
+    $signingsupport = true;
     if ($signingsupport) {
         $settings->add(new admin_setting_heading('tool_objectfs/presignedurls',
             new lang_string('settings:presignedurl:header', 'tool_objectfs'), $warningtext));
-
+        $classexists = true;
         if ($classexists) {
             $connstatus = false;
-            if ($objectfspage) {
-                $testconn = $client->test_connection();
-                $connstatus = $testconn->success;
-            }
+            // if ($objectfspage) {
+            //     $testconn = $client->test_connection();
+            //     $connstatus = $testconn->success;
+            // }
 
             $warningtext = '';
             $methodexists = method_exists('file_system', 'xsendfile_file');
@@ -190,6 +190,10 @@ if ($ADMIN->fulltree) {
             $settings->add(new admin_setting_configduration('tool_objectfs/expirationtime',
                 new lang_string('settings:presignedurl:expirationtime', 'tool_objectfs'),
                 new lang_string('settings:presignedurl:expirationtime_help', 'tool_objectfs'), 2 * HOURSECS, HOURSECS));
+
+            $settings->add(new admin_setting_configduration('tool_objectfs/roundingtime',
+                new lang_string('settings:presignedurl:roundingtime', 'tool_objectfs'),
+                new lang_string('settings:presignedurl:roundingtime_help', 'tool_objectfs'), MINSECS, HOURSECS));
 
             $settings->add(new admin_setting_configtext('tool_objectfs/presignedminfilesize',
                 new lang_string('settings:presignedurl:presignedminfilesize', 'tool_objectfs'),

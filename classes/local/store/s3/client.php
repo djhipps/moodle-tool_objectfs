@@ -60,6 +60,7 @@ class client extends object_client_base {
             $this->maxupload = OBJECTFS_BYTES_IN_TERABYTE * 5;
             $this->bucket = $config->s3_bucket;
             $this->expirationtime = $config->expirationtime;
+            $this->roundingtime = $config->roundingtime;
             $this->presignedminfilesize = $config->presignedminfilesize;
             $this->enablepresignedurls = $config->enablepresignedurls;
             $this->signingmethod = $config->signingmethod;
@@ -653,7 +654,14 @@ class client extends object_client_base {
         // With our new expiry time, ensure we round down to the nearest minute
         // (#457) to ensure expiry of potentially the same file will use the
         // same URL, and will result in less duplicate requests.
-        $expires -= ($expires % MINSECS);
+        // $expires -= ($expires % MINSECS);
+
+        if (!empty($this->roundingtime)) {
+            // Round to specified time. 
+            $expires -= ($expires % $this->roundingtime);
+        } else {
+            $expires -= ($expires % MINSECS);
+        }
 
         return $expires;
     }

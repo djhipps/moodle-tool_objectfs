@@ -29,6 +29,7 @@ abstract class object_client_base implements object_client {
 
     protected $autoloader;
     protected $expirationtime;
+    protected $roundingtime;
     protected $testdelete = true;
     public $presignedminfilesize;
     public $enablepresignedurls;
