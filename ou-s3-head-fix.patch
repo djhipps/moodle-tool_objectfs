@@ -1,0 +1,19 @@
+diff --git a/admin/tool/objectfs/classes/local/store/s3/client.php b/admin/tool/objectfs/classes/local/store/s3/client.php
+index 3f10e9d506b..d80d864efcc 100644
+--- a/admin/tool/objectfs/classes/local/store/s3/client.php
++++ b/admin/tool/objectfs/classes/local/store/s3/client.php
+@@ -512,7 +512,13 @@ class client extends object_client_base {
+             }
+         }
+ 
+-        $command = $this->client->getCommand('GetObject', $params);
++        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'HEAD') {
++            unset($params['ResponseContentType']);
++            unset($params['ResponseContentDisposition']);
++            $command = $this->client->getCommand('HeadObject', $params);
++        } else {
++            $command = $this->client->getCommand('GetObject', $params);
++        }
+         $expires = $this->get_expiration_time(time(), manager::get_header($headers, 'Expires'));
+         $request = $this->client->createPresignedRequest($command, $expires);
+ 
